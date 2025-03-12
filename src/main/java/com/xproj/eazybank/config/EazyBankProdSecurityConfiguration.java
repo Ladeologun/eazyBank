@@ -12,13 +12,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 
 @Configuration
-@Profile("!prod")
-public class EazyBankSecurityConfiguration {
+@Profile("prod")
+public class EazyBankProdSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.
-            requiresChannel(rcc->rcc.anyRequest().requiresInsecure()).
+            requiresChannel(rcc->rcc.anyRequest().requiresSecure()).
             csrf((csrf) -> csrf.disable()).
             authorizeHttpRequests((requests) -> {
             requests.requestMatchers("/contact", "/notices", "/error", "/register").permitAll()
@@ -29,6 +29,19 @@ public class EazyBankSecurityConfiguration {
         return http.build();
     }
 
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user = User.withUsername("user")
+//                .password("{noop}password")
+//                .authorities("read")
+//                .build();
+//        UserDetails admin = User.withUsername("admin")
+//                .password("{noop}password")
+//                .authorities("admin")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user, admin);
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
